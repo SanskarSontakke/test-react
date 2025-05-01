@@ -1,24 +1,12 @@
-import React, { forwardRef, useImperativeHandle } from 'react';
-import { useState } from 'react';
+import React from 'react';
 
-const Navbar = forwardRef((props, ref) => {
-
-  const [page, setPage] = useState(1);
-
-  useImperativeHandle(ref, () => ({
-    getPage() {
-      return page;
-    }
-  }));
-
+const Navbar = ({ onPageChange, currentPage }) => {
   function setPageHome() {
-    setPage(0);
-    console.log(page);
+    onPageChange(0);
   }
 
   function setPagePrices() {
-    setPage(1);
-    console.log(page);
+    onPageChange(1);
   }
 
   return (
@@ -31,16 +19,16 @@ const Navbar = forwardRef((props, ref) => {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0 align-items-center">
               <li className="nav-item active">
-                <button type="button" class="btn text-light" onClick={setPageHome}>Home</button>
+                <button type="button" className={`btn text-light ${currentPage === 0 ? 'active' : ''}`} onClick={setPageHome}>Home</button>
               </li>
               <li className="nav-item">
-                <button type="button" class="btn text-light" onClick={setPagePrices}>Prices</button>
+                <button type="button" className={`btn text-light ${currentPage === 1 ? 'active' : ''}`} onClick={setPagePrices}>Prices</button>
               </li>
               <li className="nav-item">
-                <button type="button" class="btn text-light">Trips</button>
+                <button type="button" className="btn text-light">Trips</button>
               </li>
               <li className="nav-item">
-                <button type="button" class="btn text-light">Contact</button>
+                <button type="button" className="btn text-light">Contact</button>
               </li>
             </ul>
           </div>
@@ -48,6 +36,6 @@ const Navbar = forwardRef((props, ref) => {
       </nav>
     </div>
   );
-})
+};
 
 export default Navbar;

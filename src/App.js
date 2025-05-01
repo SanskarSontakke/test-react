@@ -2,33 +2,20 @@ import './App.css'; // Or your preferred styling
 import Navbar from './components/navbar';
 import Card from './components/cards/cards';
 import CarouselMain from './components/carousel/carousel';
-import { useRef } from 'react';
-import { useEffect } from 'react';
+import { useState } from 'react';
 
 function App() {
+  const [currentPage, setCurrentPage] = useState(0);
 
-  const pageRef = useRef(null);
-
-  useEffect(() => {
-    if (pageRef.current) {
-      const currentPage = pageRef.current.getPage();
-      console.log("Current page from Navbar ref:", currentPage);
-
-      if (currentPage === 1) {
-        console.log("Page is indeed 1");
-      } else {
-        console.log("Page is NOT 1, it is:", currentPage);
-      }
-    } else {
-       console.log("pageRef.current is not assigned yet.");
-    }
-  }, []);
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    console.log("Page changed to:", newPage);
+  };
 
   return (
     <div>
-      <Navbar />
-      <CarouselMain />
-      <Card />
+      <Navbar onPageChange={handlePageChange} currentPage={currentPage} />
+      {currentPage === 0 ? <Card /> : <CarouselMain />}
     </div>
   );
 }
