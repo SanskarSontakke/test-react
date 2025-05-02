@@ -19,11 +19,6 @@ function Card() {
 
     return (
         <div>
-            <div className="d-flex flex-column align-items-center justify-content-center" style={{ minHeight: '20vh' }}>
-                <h2 className="text-dark p-3 mt-1 bg-light">
-                    Explore Our Trips
-                </h2>
-            </div>
             <div className='container-fluid mt-3'>
                 <div className='row'>
                     {multipleCardLoader}
