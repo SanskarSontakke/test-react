@@ -1,13 +1,6 @@
 import React from 'react';
 
 const Navbar = ({ onPageChange, currentPage }) => {
-  // Use onPageChange to update the page when needed
-  // For example:
-  // <button onClick={() => onPageChange(1)}>Go to Page 1</button>
-  // <button onClick={() => onPageChange(0)}>Go to Page 0</button>
-
-  // You can also use currentPage to highlight the active page in your navbar
-
   function setPageHome() {
     onPageChange(0);
   }
