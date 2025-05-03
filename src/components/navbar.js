@@ -20,7 +20,7 @@ const Navbar = ({ currentPage }) => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/quesions" className={`btn text-light ${currentPage === 2 ? 'active' : ''}`} style={{ textDecoration: 'none' }}>
+              <Link to="/questions" className={`btn text-light ${currentPage === 2 ? 'active' : ''}`} style={{ textDecoration: 'none' }}>
                 Questions
               </Link>
             </li>
