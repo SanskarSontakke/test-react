@@ -6,14 +6,13 @@ import { Outlet } from "react-router-dom";
 
 const Card = lazy(() => import('./components/cards/cards'));
 const CarouselMain = lazy(() => import('./components/carousel/carousel'));
-
-const Loading = () => <div>Loading...</div>;
+const CardDetail = lazy(() => import('./components/cards/CardDetail'));
 
 function Layout() {
   return (
     <div>
       <Navbar />
-      <Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
         <Outlet />
       </Suspense>
     </div>
@@ -25,16 +24,9 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={
-            <Suspense>
-              <CarouselMain />
-            </Suspense>
-          } />
-          <Route path="prices" element={
-            <Suspense>
-              <Card />
-            </Suspense>
-          } />
+          <Route index element={<CarouselMain />} />
+          <Route path="prices" element={<Card />} />
+          <Route path="card/:id" element={<CardDetail />} />
         </Route>
       </Routes>
     </BrowserRouter>

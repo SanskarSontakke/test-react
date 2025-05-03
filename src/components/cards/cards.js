@@ -1,32 +1,19 @@
 import React from 'react';
-import CardLoader from "./cardLoader";
-import cardsData from "./cardsData";
+import CardLoader from './cardLoader';
+import cardsData from './cardsData';
 
-function Card() {
-    const multipleCardLoader = cardsData.map(
-        data => {
-            return (
-                <div className='col-md-2 mb-3'>
-                    <CardLoader
-                        name={data.name}
-                        info={data.info}
-                        img={data.img}
-                    />
-                </div>
-            );
-        }
-    )
-
+function Cards() {
     return (
-        <div>
-            <div className='container-fluid mt-3'>
-                <div className='row'>
-                    {multipleCardLoader}
-                </div>
+        <div className="container-fluid">
+            <div className="row row-cols-1 row-cols-md-3 g-4">
+                {cardsData.map(card => (
+                    <div key={card.id} className="col-md-3 pt-4">
+                        <CardLoader {...card} />
+                    </div>
+                ))}
             </div>
-
         </div>
     );
 }
 
-export default Card;
+export default Cards;
