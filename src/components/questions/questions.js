@@ -11,6 +11,7 @@ function Questions() {
   const [loading, setLoading] = useState(true);
   const [selectedAnswers, setSelectedAnswers] = useState({}); // Track selected answers for each question
   const [showSubmit, setShowSubmit] = useState(false); // State to show submit screen
+  const [answerCorrectness, setAnswerCorrectness] = useState(Array(quizQuestions.length).fill(null)); // null: unanswered, true: correct, false: incorrect
 
   useEffect(() => {
     // Simulate loading questions from an API
@@ -25,6 +26,11 @@ function Questions() {
       ...prevAnswers,
       [currentQuestion]: answerText, // Store the selected answer for the current question
     }));
+
+    const updatedAnswerCorrectness = [...answerCorrectness];
+    updatedAnswerCorrectness[currentQuestion] = isCorrect;
+    setAnswerCorrectness(updatedAnswerCorrectness);
+
     if (isCorrect) {
       setScore(score + 1);
     }
@@ -57,6 +63,7 @@ function Questions() {
     setShowScore(false);
     setSelectedAnswers({}); // Clear all selected answers
     setShowSubmit(false); // Hide submit screen on reset
+    setAnswerCorrectness(Array(quizQuestions.length).fill(null)); // Reset answer correctness
   };
 
   if (loading) {
@@ -110,6 +117,20 @@ function Questions() {
             <button className="next-button" onClick={handleNextQuestion}>
               {currentQuestion === questions.length - 1 ? 'Submit' : 'Next'}
             </button>
+          </div>
+          <div className="question-progress">
+            {questions.map((question, index) => (
+              <span
+                key={index}
+                className={`question-progress-circle ${
+                  answerCorrectness[index] === null
+                    ? 'unanswered'
+                    : answerCorrectness[index]
+                    ? 'correct'
+                    : 'incorrect'
+                }`}
+              ></span>
+            ))}
           </div>
         </>
       )}
