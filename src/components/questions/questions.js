@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { QuestionLoader } from './questionsLoader';
 import './questions.css';
+import { quizQuestions } from './questionsData'; // Import the questions
 
 function Questions() {
   const [questions, setQuestions] = useState([]);
@@ -8,69 +9,54 @@ function Questions() {
   const [score, setScore] = useState(0);
   const [showScore, setShowScore] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [selectedAnswers, setSelectedAnswers] = useState({}); // Track selected answers for each question
+  const [showSubmit, setShowSubmit] = useState(false); // State to show submit screen
 
   useEffect(() => {
     // Simulate loading questions from an API
     setTimeout(() => {
-      setQuestions([
-        {
-          questionText: 'What is the capital of France?',
-          answerOptions: [
-            { answerText: 'New York', isCorrect: false },
-            { answerText: 'London', isCorrect: false },
-            { answerText: 'Paris', isCorrect: true },
-            { answerText: 'Dublin', isCorrect: false },
-          ],
-        },
-        {
-          questionText: 'Who is CEO of Tesla?',
-          answerOptions: [
-            { answerText: 'Jeff Bezos', isCorrect: false },
-            { answerText: 'Elon Musk', isCorrect: true },
-            { answerText: 'Bill Gates', isCorrect: false },
-            { answerText: 'Tony Stark', isCorrect: false },
-          ],
-        },
-        {
-          questionText: 'The iPhone was created by which company?',
-          answerOptions: [
-            { answerText: 'Apple', isCorrect: true },
-            { answerText: 'Intel', isCorrect: false },
-            { answerText: 'Amazon', isCorrect: false },
-            { answerText: 'Microsoft', isCorrect: false },
-          ],
-        },
-        {
-          questionText: 'How many Harry Potter books are there?',
-          answerOptions: [
-            { answerText: '1', isCorrect: false },
-            { answerText: '4', isCorrect: false },
-            { answerText: '6', isCorrect: false },
-            { answerText: '7', isCorrect: true },
-          ],
-        },
-      ]);
+      setQuestions(quizQuestions); // Use imported questions
       setLoading(false);
     }, 2000);
   }, []);
 
-  const handleAnswerOptionClick = (isCorrect) => {
+  const handleAnswerOptionClick = (isCorrect, answerText) => {
+    setSelectedAnswers(prevAnswers => ({
+      ...prevAnswers,
+      [currentQuestion]: answerText, // Store the selected answer for the current question
+    }));
     if (isCorrect) {
       setScore(score + 1);
     }
+  };
 
+  const handleNextQuestion = () => {
     const nextQuestion = currentQuestion + 1;
     if (nextQuestion < questions.length) {
       setCurrentQuestion(nextQuestion);
     } else {
-      setShowScore(true);
+      setShowSubmit(true); // Show submit screen when all questions are answered
     }
+  };
+
+  const handleBackQuestion = () => {
+    const prevQuestion = currentQuestion - 1;
+    if (prevQuestion >= 0) {
+      setCurrentQuestion(prevQuestion);
+    }
+  };
+
+  const handleSubmitQuiz = () => {
+    setShowSubmit(false);
+    setShowScore(true);
   };
 
   const resetQuiz = () => {
     setCurrentQuestion(0);
     setScore(0);
     setShowScore(false);
+    setSelectedAnswers({}); // Clear all selected answers
+    setShowSubmit(false); // Hide submit screen on reset
   };
 
   if (loading) {
@@ -81,9 +67,18 @@ function Questions() {
     );
   }
 
+  const selectedAnswer = selectedAnswers[currentQuestion]; // Get the selected answer for the current question
+
   return (
     <div className="questions-container">
-      {showScore ? (
+      {showSubmit ? (
+        <div className="submit-section">
+          <h2>Submit Quiz?</h2>
+          <p>Are you sure you want to submit the quiz?</p>
+          <button className="submit-button" onClick={handleSubmitQuiz}>Submit</button>
+          <button className="back-button" onClick={() => setShowSubmit(false)}>Back to Quiz</button>
+        </div>
+      ) : showScore ? (
         <div className="score-section">
           <h2>Quiz Completed!</h2>
           <p>You scored {score} out of {questions.length}</p>
@@ -101,12 +96,20 @@ function Questions() {
             {questions[currentQuestion].answerOptions.map((answerOption, index) => (
               <button 
                 key={index} 
-                className="answer-button"
-                onClick={() => handleAnswerOptionClick(answerOption.isCorrect)}
+                className={`answer-button ${selectedAnswer === answerOption.answerText ? 'selected' : ''}`}
+                onClick={() => handleAnswerOptionClick(answerOption.isCorrect, answerOption.answerText)}
               >
                 {answerOption.answerText}
               </button>
             ))}
+          </div>
+          <div className="navigation">
+            <button className="back-button" onClick={handleBackQuestion} disabled={currentQuestion === 0}>
+              Back
+            </button>
+            <button className="next-button" onClick={handleNextQuestion}>
+              {currentQuestion === questions.length - 1 ? 'Submit' : 'Next'}
+            </button>
           </div>
         </>
       )}

@@ -1,13 +1,42 @@
+/* General body styling for better aesthetics */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  background-color: #f4f4f4;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
 /* Main container styles */
 .questions-container {
+  min-height: 100vh;
+  background: linear-gradient(to right, #6a11cb, #2575fc); /* Gradient background */
+  color: white; /* Adjust text color for better readability on the background */
+  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  background-color: #f8f9fa;
-  padding: 20px;
-  font-family: 'Arial', sans-serif;
+  text-align: center; /* Center text for a cleaner look */
+}
+
+/* Enhanced card styling for question and score sections */
+.card {
+  background-color: rgba(255, 255, 255, 0.95); /* Use a translucent white for the card */
+  color: #333; /* Set the text color to dark for readability */
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+  padding: 30px;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 800px;
+  transition: transform 0.3s ease-in-out; /* Add transition for a smooth effect */
+}
+
+.card:hover {
+  transform: translateY(-5px); /* Lift the card slightly on hover */
 }
 
 /* Question section styles */
@@ -21,22 +50,26 @@
   margin-bottom: 20px;
 }
 
+/* Question count styling */
 .question-count {
-  font-size: 18px;
-  color: #6c757d;
+  font-size: 1.2em;
+  color: #777; /* Darken the color for better visibility */
   margin-bottom: 15px;
+  text-align: left; /* Align the text to the left */
 }
 
 .question-count span {
   font-weight: bold;
-  color: #007bff;
+  color: #007bff; /* Keep the original color for emphasis */
 }
 
+/* Question text styling */
 .question-text {
-  font-size: 24px;
-  font-weight: 600;
-  color: #343a40;
+  font-size: 1.5em;
+  font-weight: 500;
+  color: #333; /* Ensure the text is readable */
   margin-bottom: 20px;
+  text-align: left; /* Align the text to the left */
 }
 
 /* Answer section styles */
@@ -48,26 +81,36 @@
   gap: 12px;
 }
 
+/* Enhanced button styling */
 .answer-button {
-  background-color: white;
-  border: 2px solid #e9ecef;
-  border-radius: 8px;
+  background-color: #f8f9fa; /* Light background for the buttons */
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  text-align: left;
   padding: 15px 20px;
-  font-size: 18px;
-  color: #495057;
+  font-size: 1em;
+  color: #555; /* Darker text for better readability */
   cursor: pointer;
   transition: all 0.3s ease;
-  text-align: left;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
 }
 
 .answer-button:hover {
-  background-color: #f1f3f5;
-  border-color: #ced4da;
-  transform: translateY(-2px);
+  background-color: #e9ecef; /* Slightly darker background on hover */
+  border-color: #bbb;
+  transform: translateY(-3px); /* Slight lift on hover */
 }
 
 .answer-button:active {
-  transform: translateY(0);
+  transform: translateY(0); /* Reset position when active */
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2); /* Adjust shadow when active */
+}
+
+/* Style for the selected answer button */
+.answer-button.selected {
+    background-color: #007bff;
+    color: white;
+    border-color: #0056b3;
 }
 
 /* Score section styles */
@@ -82,30 +125,38 @@
 }
 
 .score-section h2 {
-  font-size: 28px;
-  color: #343a40;
+  font-size: 2.2em;
+  color: #333; /* Ensure the text is readable */
   margin-bottom: 20px;
 }
 
 .score-section p {
-  font-size: 22px;
-  color: #495057;
+  font-size: 1.4em;
+  color: #555; /* Darker text for better readability */
   margin-bottom: 30px;
 }
 
+/* Reset button styles */
 .reset-button {
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 12px 24px;
-  font-size: 18px;
+  font-size: 1em;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.2); /* Stronger shadow for the button */
 }
 
 .reset-button:hover {
-  background-color: #0069d9;
+  background-color: #0056b3; /* Darker shade on hover */
+  transform: translateY(-2px); /* Slight lift on hover */
+}
+
+.reset-button:active {
+  transform: translateY(0); /* Reset position when active */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Adjust shadow when active */
 }
 
 /* Loader styles */
@@ -127,24 +178,24 @@
 }
 
 .loader-spinner {
-  width: 60px;
-  height: 60px;
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid #007bff;
+  width: 70px;
+  height: 70px;
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #007bff;
   border-radius: 50%;
   animation: spin 1.5s linear infinite;
   margin-bottom: 20px;
 }
 
 .loader-content h2 {
-  font-size: 24px;
-  color: #343a40;
-  margin-bottom: 10px;
+  font-size: 1.8em;
+  color: #333; /* Ensure the text is readable */
+  margin-bottom: 15px;
 }
 
 .loader-content p {
-  font-size: 16px;
-  color: #6c757d;
+  font-size: 1.1em;
+  color: #777; /* Darken the color for better visibility */
 }
 
 @keyframes spin {
@@ -163,11 +214,143 @@
   }
   
   .question-text {
-    font-size: 20px;
+    font-size: 1.3em;
   }
   
   .answer-button {
     padding: 12px 16px;
-    font-size: 16px;
+    font-size: 0.9em;
   }
+  
+  .score-section h2 {
+    font-size: 2em;
+  }
+  
+  .score-section p {
+    font-size: 1.2em;
+  }
+}
+
+@media (max-width: 576px) {
+  .question-text {
+    font-size: 1.1em;
+  }
+
+  .answer-button {
+    padding: 10px 15px;
+    font-size: 0.85em;
+  }
+
+  .score-section h2 {
+    font-size: 1.7em;
+  }
+
+  .score-section p {
+    font-size: 1em;
+  }
+}
+
+/* Navigation buttons styling */
+.navigation {
+  display: flex;
+  justify-content: space-between; /* Positions buttons on left and right */
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+  padding: 10px 0; /* Adjust padding as needed */
+  margin-top: 20px;
+}
+
+.navigation button {
+  padding: 12px 24px; /* Increase padding for better touch area */
+  border: none;
+  border-radius: 8px; /* More rounded corners */
+  cursor: pointer;
+  font-size: 1em; /* Adjust font size as needed */
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Subtle shadow for depth */
+}
+
+.navigation .back-button {
+  background-color: white; /* White background */
+  color: #007bff; /* Primary color text */
+  border: 1px solid #007bff; /* Primary color border */
+}
+
+.navigation .next-button {
+  background-color: #007bff; /* Primary color background */
+  color: white; /* White text */
+}
+
+.navigation .back-button:hover {
+  background-color: #e9ecef; /* Light gray on hover */
+  color: #0056b3; /* Darker primary color on hover */
+  border-color: #0056b3;
+  transform: translateY(-2px); /* Slight lift on hover */
+}
+
+.navigation .next-button:hover {
+  background-color: #0056b3; /* Darker primary color on hover */
+  transform: translateY(-2px); /* Slight lift on hover */
+}
+
+.navigation .back-button:active,
+.navigation .next-button:active {
+  transform: translateY(0); /* Reset position when active */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Adjust shadow when active */
+}
+
+.navigation .back-button:disabled,
+.navigation .next-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #f8f9fa; /* Light gray background when disabled */
+  color: #6c757d; /* Gray text when disabled */
+  border-color: #6c757d;
+}
+
+/* Submit section styles */
+.submit-section {
+  width: 100%;
+  max-width: 800px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  text-align: center;
+}
+
+.submit-section h2 {
+  font-size: 2.2em;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.submit-section p {
+  font-size: 1.4em;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+.submit-section button {
+  background-color: #28a745; /* Green submit button */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.2);
+  margin: 0 10px;
+}
+
+.submit-section button:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+.submit-section button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 const Navbar = ({ currentPage }) => {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-primary" style={{ padding: '0.5rem 1rem' }}>
       <div className="container-fluid">
         <Link className="navbar-brand font-weight-bold" to="/">
           Trips.com
