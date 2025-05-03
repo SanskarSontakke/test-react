@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Navbar = ({ currentPage }) => {
@@ -21,10 +20,14 @@ const Navbar = ({ currentPage }) => {
               </Link>
             </li>
             <li className="nav-item">
-              <button type="button" className="btn text-light">Trips</button>
+              <Link to="/quesions" className={`btn text-light ${currentPage === 2 ? 'active' : ''}`} style={{ textDecoration: 'none' }}>
+                Questions
+              </Link>
             </li>
             <li className="nav-item">
-              <button type="button" className="btn text-light">Contact</button>
+              <Link to="/prices" className={`btn text-light ${currentPage === 1 ? 'active' : ''}`} style={{ textDecoration: 'none' }}>
+                Prices
+              </Link>
             </li>
           </ul>
         </div>
