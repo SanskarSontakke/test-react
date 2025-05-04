@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { QuestionLoader } from './questionsLoader';
-import './questions.css';
-import { quizQuestions } from './questionsData'; // Import the questions
+import Question from './Question';
+import ScoreCard from './ScoreCard';
+import { quizQuestions } from './questionsData';
 
 function Questions() {
   const [questions, setQuestions] = useState([]);
@@ -9,34 +10,31 @@ function Questions() {
   const [score, setScore] = useState(0);
   const [showScore, setShowScore] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [selectedAnswers, setSelectedAnswers] = useState({}); // Track selected answers for each question
-  const [showSubmit, setShowSubmit] = useState(false); // State to show submit screen
-  const [answerCorrectness, setAnswerCorrectness] = useState(Array(quizQuestions.length).fill(null)); // null: unanswered, true: correct, false: incorrect
-  const [questionFeedback, setQuestionFeedback] = useState(Array(quizQuestions.length).fill(false)); // Track feedback visibility for each question
-  const [questionLocked, setQuestionLocked] = useState(Array(quizQuestions.length).fill(false)); // Track if each question is locked
+  const [selectedAnswers, setSelectedAnswers] = useState({});
+  const [showSubmit, setShowSubmit] = useState(false);
+  const [answerCorrectness, setAnswerCorrectness] = useState(Array(quizQuestions.length).fill(null));
+  const [questionFeedback, setQuestionFeedback] = useState(Array(quizQuestions.length).fill(false));
+  const [questionLocked, setQuestionLocked] = useState(Array(quizQuestions.length).fill(false));
 
   useEffect(() => {
-    // Simulate loading questions from an API
     setTimeout(() => {
-      setQuestions(quizQuestions); // Use imported questions
+      setQuestions(quizQuestions);
       setLoading(false);
     }, 2000);
   }, []);
 
   const handleAnswerOptionClick = (isCorrect, answerText) => {
-    // If the question is already locked, don't allow changing the answer
     if (questionLocked[currentQuestion]) {
       return;
     }
 
-    // Lock the current question
     const updatedQuestionLocked = [...questionLocked];
     updatedQuestionLocked[currentQuestion] = true;
     setQuestionLocked(updatedQuestionLocked);
 
     setSelectedAnswers(prevAnswers => ({
       ...prevAnswers,
-      [currentQuestion]: answerText, // Store the selected answer for the current question
+      [currentQuestion]: answerText,
     }));
 
     const updatedAnswerCorrectness = [...answerCorrectness];
@@ -47,7 +45,6 @@ function Questions() {
       setScore(score + 1);
     }
 
-    // Show feedback after 0.5 seconds and store it for this question
     setTimeout(() => {
       const updatedQuestionFeedback = [...questionFeedback];
       updatedQuestionFeedback[currentQuestion] = true;
@@ -56,14 +53,12 @@ function Questions() {
   };
 
   const handleNextQuestion = () => {
-    // Ensure there are questions to proceed to
     if (!questions || questions.length === 0) {
       return;
     }
     const nextQuestion = currentQuestion + 1;
     if (nextQuestion < questions.length) {
       setCurrentQuestion(nextQuestion);
-      // Unlock the next question and reset feedback when moving to the next question
       const updatedQuestionLocked = [...questionLocked];
       updatedQuestionLocked[nextQuestion] = false;
       setQuestionLocked(updatedQuestionLocked);
@@ -72,7 +67,7 @@ function Questions() {
       updatedQuestionFeedback[nextQuestion] = false;
       setQuestionFeedback(updatedQuestionFeedback);
     } else {
-      setShowSubmit(true); // Show submit screen when all questions are answered
+      setShowSubmit(true);
     }
   };
 
@@ -95,11 +90,11 @@ function Questions() {
     setCurrentQuestion(0);
     setScore(0);
     setShowScore(false);
-    setSelectedAnswers({}); // Clear all selected answers
-    setShowSubmit(false); // Hide submit screen on reset
-    setAnswerCorrectness(Array(quizQuestions.length).fill(null)); // Reset answer correctness
-    setQuestionLocked(Array(quizQuestions.length).fill(false)); // Reset question locks
-    setQuestionFeedback(Array(quizQuestions.length).fill(false)); // Reset question feedback
+    setSelectedAnswers({});
+    setShowSubmit(false);
+    setAnswerCorrectness(Array(quizQuestions.length).fill(null));
+    setQuestionLocked(Array(quizQuestions.length).fill(false));
+    setQuestionFeedback(Array(quizQuestions.length).fill(false));
   };
 
   if (loading) {
@@ -110,7 +105,6 @@ function Questions() {
     );
   }
 
-  // Check if questions array is valid and not empty
   if (!questions || questions.length === 0) {
     return (
       <div className="questions-container">
@@ -119,12 +113,11 @@ function Questions() {
     );
   }
 
-  const selectedAnswer = selectedAnswers[currentQuestion]; // Get the selected answer for the current question
+  const selectedAnswer = selectedAnswers[currentQuestion];
   const isCurrentQuestionAnswered = questionLocked[currentQuestion];
   const isCurrentAnswerCorrect = answerCorrectness[currentQuestion];
   const showCurrentFeedback = questionFeedback[currentQuestion];
 
-  // Calculate the number of correct, wrong, and unattempted questions
   const correctAnswers = answerCorrectness.filter(result => result === true).length;
   const wrongAnswers = answerCorrectness.filter(result => result === false).length;
   const unattemptedQuestions = answerCorrectness.filter(result => result === null).length;
@@ -139,46 +132,26 @@ function Questions() {
           <button className="back-button" onClick={() => setShowSubmit(false)}>Back to Quiz</button>
         </div>
       ) : showScore ? (
-        <div className="score-section">
-          <h2>Quiz Completed!</h2>
-          <p>You scored {score} out of {questions.length}</p>
-          <p>Correct Answers: {correctAnswers}</p>
-          <p>Wrong Answers: {wrongAnswers}</p>
-          <p>Unattempted Questions: {unattemptedQuestions}</p>
-          <button className="reset-button" onClick={resetQuiz}>Restart Quiz</button>
-        </div>
+        <ScoreCard
+          score={score}
+          questions={questions}
+          correctAnswers={correctAnswers}
+          wrongAnswers={wrongAnswers}
+          unattemptedQuestions={unattemptedQuestions}
+          resetQuiz={resetQuiz}
+        />
       ) : (
         <>
-          <div className="question-section">
-            <div className="question-count">
-              <span>Question {currentQuestion + 1}</span>/{questions.length}
-            </div>
-            <div className="question-text">{questions[currentQuestion].questionText}</div>
-          </div>
-          <div className="answer-section">
-            {questions[currentQuestion].answerOptions.map((answerOption, index) => {
-              // Determine if this option should be highlighted as the correct answer
-              const isCorrectAnswer = answerOption.isCorrect;
-              const shouldShowCorrectAnswer = showCurrentFeedback && !isCurrentAnswerCorrect && isCorrectAnswer;
-              
-              return (
-                <button 
-                  key={index} 
-                  className={`answer-button 
-                    ${selectedAnswer === answerOption.answerText ? 'selected' : ''} 
-                    ${showCurrentFeedback && selectedAnswer === answerOption.answerText 
-                      ? (answerOption.isCorrect ? 'correct-answer' : 'incorrect-answer') 
-                      : ''}
-                    ${shouldShowCorrectAnswer ? 'correct-answer' : ''}
-                  `}
-                  onClick={() => handleAnswerOptionClick(answerOption.isCorrect, answerOption.answerText)}
-                  disabled={isCurrentQuestionAnswered} // Ensure this is correctly set
-                >
-                  {answerOption.answerText}
-                </button>
-              );
-            })}
-          </div>
+          <Question
+            question={questions[currentQuestion]}
+            currentQuestion={currentQuestion}
+            totalQuestions={questions.length}
+            handleAnswerOptionClick={handleAnswerOptionClick}
+            selectedAnswer={selectedAnswer}
+            isCurrentQuestionAnswered={isCurrentQuestionAnswered}
+            showCurrentFeedback={showCurrentFeedback}
+            isCurrentAnswerCorrect={isCurrentAnswerCorrect}
+          />
           <div className="navigation">
             <button className="back-button" onClick={handleBackQuestion} disabled={currentQuestion === 0}>
               Back
@@ -198,8 +171,8 @@ function Questions() {
                     ? 'correct'
                     : 'incorrect'
                 }`}
-                onClick={() => setCurrentQuestion(index)} // Allow clicking on progress circles to navigate
-                style={{ cursor: 'pointer' }} // Add pointer cursor to indicate clickability
+                onClick={() => setCurrentQuestion(index)} 
+                style={{ cursor: 'pointer' }}
               ></span>
             ))}
           </div>

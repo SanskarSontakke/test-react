@@ -53,7 +53,6 @@ export const quizQuestions = [
       { answerText: 'Pacific Ocean', isCorrect: true },
     ],
   },
-  // New questions added below
   {
     questionText: 'What is the smallest prime number?',
     answerOptions: [
