@@ -93,6 +93,7 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  pointer-events: auto; /* Allow clicking by default */
 }
 
 .answer-button:hover {
@@ -111,6 +112,58 @@ body {
     background-color: #007bff;
     color: white;
     border-color: #0056b3;
+}
+
+/* New styles for correct and incorrect answers */
+.answer-button.correct {
+  background-color: #28a745;
+  color: white;
+  border-color: #1e7e34;
+  pointer-events: none; /* Disable clicking after selection */
+}
+
+.answer-button.incorrect {
+  background-color: #dc3545;
+  color: white;
+  border-color: #bd2130;
+  pointer-events: none; /* Disable clicking after selection */
+}
+
+/* Additional styles for correct and incorrect answers */
+.answer-button.correct-answer {
+  background-color: #4caf50; /* Green color for correct answers */
+  color: white;
+  border-color: #45a049;
+}
+
+.answer-button.incorrect-answer {
+  background-color: #f44336; /* Red color for incorrect answers */
+  color: white;
+  border-color: #d32f2f;
+}
+
+/* Style for disabled buttons */
+.answer-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+/* Ensure selected state is still visible */
+.answer-button.selected:disabled {
+  opacity: 1;
+}
+
+/* Disable hover effects for answered questions */
+.answer-button.correct:hover,
+.answer-button.incorrect:hover {
+  transform: none;
+  background-color: inherit;
+}
+
+/* Disable all answer buttons after selection */
+.answer-section.answered .answer-button {
+  pointer-events: none;
+  opacity: 0.7;
 }
 
 /* Score section styles */
@@ -366,26 +419,41 @@ body {
 .question-progress {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 25px;
+  gap: 10px; /* Add spacing between indicators */
 }
 
-.question-progress-circle {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  margin: 0 5px;
-  border: 2px solid #fff;
+.question-progress-indicator {
+  width: 22px;
+  height: 22px;
+  margin: 0 2px;
   display: inline-block;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  position: relative;
+  border-radius: 4px; /* Slightly rounded corners for a modern look */
 }
 
-.question-progress-circle.unanswered {
-  background-color: #888;
+/* More vibrant colors */
+.question-progress-indicator.unanswered {
+  background-color: #a0a0a0; /* Darker gray */
 }
 
-.question-progress-circle.correct {
-  background-color: green;
+.question-progress-indicator.correct {
+  background-color: #00c853; /* Vibrant green */
 }
 
-.question-progress-circle.incorrect {
-  background-color: red;
+.question-progress-indicator.incorrect {
+  background-color: #ff1744; /* Vibrant red */
+}
+
+/* Hover effect */
+.question-progress-indicator:hover {
+  transform: scale(1.15);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Active/current question indicator */
+.question-progress-indicator.active {
+  border: 2px solid white;
 }

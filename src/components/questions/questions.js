@@ -12,6 +12,8 @@ function Questions() {
   const [selectedAnswers, setSelectedAnswers] = useState({}); // Track selected answers for each question
   const [showSubmit, setShowSubmit] = useState(false); // State to show submit screen
   const [answerCorrectness, setAnswerCorrectness] = useState(Array(quizQuestions.length).fill(null)); // null: unanswered, true: correct, false: incorrect
+  const [questionFeedback, setQuestionFeedback] = useState(Array(quizQuestions.length).fill(false)); // Track feedback visibility for each question
+  const [questionLocked, setQuestionLocked] = useState(Array(quizQuestions.length).fill(false)); // Track if each question is locked
 
   useEffect(() => {
     // Simulate loading questions from an API
@@ -22,6 +24,16 @@ function Questions() {
   }, []);
 
   const handleAnswerOptionClick = (isCorrect, answerText) => {
+    // If the question is already locked, don't allow changing the answer
+    if (questionLocked[currentQuestion]) {
+      return;
+    }
+
+    // Lock the current question
+    const updatedQuestionLocked = [...questionLocked];
+    updatedQuestionLocked[currentQuestion] = true;
+    setQuestionLocked(updatedQuestionLocked);
+
     setSelectedAnswers(prevAnswers => ({
       ...prevAnswers,
       [currentQuestion]: answerText, // Store the selected answer for the current question
@@ -34,6 +46,13 @@ function Questions() {
     if (isCorrect) {
       setScore(score + 1);
     }
+
+    // Show feedback after 0.5 seconds and store it for this question
+    setTimeout(() => {
+      const updatedQuestionFeedback = [...questionFeedback];
+      updatedQuestionFeedback[currentQuestion] = true;
+      setQuestionFeedback(updatedQuestionFeedback);
+    }, 500);
   };
 
   const handleNextQuestion = () => {
@@ -57,6 +76,19 @@ function Questions() {
     setShowScore(true);
   };
 
+  // Add the getProgressIndicatorClass function here
+  const getProgressIndicatorClass = (index) => {
+    const baseClass = 'question-progress-indicator';
+    
+    if (answerCorrectness[index] === null) {
+      return `${baseClass} unanswered`;
+    } else if (answerCorrectness[index]) {
+      return `${baseClass} correct`;
+    } else {
+      return `${baseClass} incorrect`;
+    }
+  };
+
   const resetQuiz = () => {
     setCurrentQuestion(0);
     setScore(0);
@@ -64,6 +96,8 @@ function Questions() {
     setSelectedAnswers({}); // Clear all selected answers
     setShowSubmit(false); // Hide submit screen on reset
     setAnswerCorrectness(Array(quizQuestions.length).fill(null)); // Reset answer correctness
+    setQuestionLocked(Array(quizQuestions.length).fill(false)); // Reset question locks
+    setQuestionFeedback(Array(quizQuestions.length).fill(false)); // Reset question feedback
   };
 
   if (loading) {
@@ -75,6 +109,9 @@ function Questions() {
   }
 
   const selectedAnswer = selectedAnswers[currentQuestion]; // Get the selected answer for the current question
+  const isCurrentQuestionAnswered = questionLocked[currentQuestion];
+  const isCurrentAnswerCorrect = answerCorrectness[currentQuestion];
+  const showCurrentFeedback = questionFeedback[currentQuestion];
 
   return (
     <div className="questions-container">
@@ -100,15 +137,28 @@ function Questions() {
             <div className="question-text">{questions[currentQuestion].questionText}</div>
           </div>
           <div className="answer-section">
-            {questions[currentQuestion].answerOptions.map((answerOption, index) => (
-              <button 
-                key={index} 
-                className={`answer-button ${selectedAnswer === answerOption.answerText ? 'selected' : ''}`}
-                onClick={() => handleAnswerOptionClick(answerOption.isCorrect, answerOption.answerText)}
-              >
-                {answerOption.answerText}
-              </button>
-            ))}
+            {questions[currentQuestion].answerOptions.map((answerOption, index) => {
+              // Determine if this option should be highlighted as the correct answer
+              const isCorrectAnswer = answerOption.isCorrect;
+              const shouldShowCorrectAnswer = showCurrentFeedback && !isCurrentAnswerCorrect && isCorrectAnswer;
+              
+              return (
+                <button 
+                  key={index} 
+                  className={`answer-button 
+                    ${selectedAnswer === answerOption.answerText ? 'selected' : ''} 
+                    ${showCurrentFeedback && selectedAnswer === answerOption.answerText 
+                      ? (answerOption.isCorrect ? 'correct-answer' : 'incorrect-answer') 
+                      : ''}
+                    ${shouldShowCorrectAnswer ? 'correct-answer' : ''}
+                  `}
+                  onClick={() => handleAnswerOptionClick(answerOption.isCorrect, answerOption.answerText)}
+                  disabled={isCurrentQuestionAnswered}
+                >
+                  {answerOption.answerText}
+                </button>
+              );
+            })}
           </div>
           <div className="navigation">
             <button className="back-button" onClick={handleBackQuestion} disabled={currentQuestion === 0}>
@@ -122,13 +172,12 @@ function Questions() {
             {questions.map((question, index) => (
               <span
                 key={index}
-                className={`question-progress-circle ${
-                  answerCorrectness[index] === null
-                    ? 'unanswered'
-                    : answerCorrectness[index]
-                    ? 'correct'
-                    : 'incorrect'
-                }`}
+                className={getProgressIndicatorClass(index)}
+                onClick={() => setCurrentQuestion(index)}
+                style={{ 
+                  cursor: 'pointer',
+                  border: currentQuestion === index ? '2px solid white' : 'none'
+                }}
               ></span>
             ))}
           </div>
