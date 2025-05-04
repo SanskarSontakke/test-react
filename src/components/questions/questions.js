@@ -56,15 +56,30 @@ function Questions() {
   };
 
   const handleNextQuestion = () => {
+    // Ensure there are questions to proceed to
+    if (!questions || questions.length === 0) {
+      return;
+    }
     const nextQuestion = currentQuestion + 1;
     if (nextQuestion < questions.length) {
       setCurrentQuestion(nextQuestion);
+      // Unlock the next question and reset feedback when moving to the next question
+      const updatedQuestionLocked = [...questionLocked];
+      updatedQuestionLocked[nextQuestion] = false;
+      setQuestionLocked(updatedQuestionLocked);
+
+      const updatedQuestionFeedback = [...questionFeedback];
+      updatedQuestionFeedback[nextQuestion] = false;
+      setQuestionFeedback(updatedQuestionFeedback);
     } else {
       setShowSubmit(true); // Show submit screen when all questions are answered
     }
   };
 
   const handleBackQuestion = () => {
+    if (!questions || questions.length === 0) {
+      return;
+    }
     const prevQuestion = currentQuestion - 1;
     if (prevQuestion >= 0) {
       setCurrentQuestion(prevQuestion);
@@ -74,19 +89,6 @@ function Questions() {
   const handleSubmitQuiz = () => {
     setShowSubmit(false);
     setShowScore(true);
-  };
-
-  // Add the getProgressIndicatorClass function here
-  const getProgressIndicatorClass = (index) => {
-    const baseClass = 'question-progress-indicator';
-    
-    if (answerCorrectness[index] === null) {
-      return `${baseClass} unanswered`;
-    } else if (answerCorrectness[index]) {
-      return `${baseClass} correct`;
-    } else {
-      return `${baseClass} incorrect`;
-    }
   };
 
   const resetQuiz = () => {
@@ -108,10 +110,24 @@ function Questions() {
     );
   }
 
+  // Check if questions array is valid and not empty
+  if (!questions || questions.length === 0) {
+    return (
+      <div className="questions-container">
+        <p>No questions available.</p>
+      </div>
+    );
+  }
+
   const selectedAnswer = selectedAnswers[currentQuestion]; // Get the selected answer for the current question
   const isCurrentQuestionAnswered = questionLocked[currentQuestion];
   const isCurrentAnswerCorrect = answerCorrectness[currentQuestion];
   const showCurrentFeedback = questionFeedback[currentQuestion];
+
+  // Calculate the number of correct, wrong, and unattempted questions
+  const correctAnswers = answerCorrectness.filter(result => result === true).length;
+  const wrongAnswers = answerCorrectness.filter(result => result === false).length;
+  const unattemptedQuestions = answerCorrectness.filter(result => result === null).length;
 
   return (
     <div className="questions-container">
@@ -126,6 +142,9 @@ function Questions() {
         <div className="score-section">
           <h2>Quiz Completed!</h2>
           <p>You scored {score} out of {questions.length}</p>
+          <p>Correct Answers: {correctAnswers}</p>
+          <p>Wrong Answers: {wrongAnswers}</p>
+          <p>Unattempted Questions: {unattemptedQuestions}</p>
           <button className="reset-button" onClick={resetQuiz}>Restart Quiz</button>
         </div>
       ) : (
@@ -153,7 +172,7 @@ function Questions() {
                     ${shouldShowCorrectAnswer ? 'correct-answer' : ''}
                   `}
                   onClick={() => handleAnswerOptionClick(answerOption.isCorrect, answerOption.answerText)}
-                  disabled={isCurrentQuestionAnswered}
+                  disabled={isCurrentQuestionAnswered} // Ensure this is correctly set
                 >
                   {answerOption.answerText}
                 </button>
@@ -172,12 +191,15 @@ function Questions() {
             {questions.map((question, index) => (
               <span
                 key={index}
-                className={getProgressIndicatorClass(index)}
-                onClick={() => setCurrentQuestion(index)}
-                style={{ 
-                  cursor: 'pointer',
-                  border: currentQuestion === index ? '2px solid white' : 'none'
-                }}
+                className={`question-progress-circle ${
+                  answerCorrectness[index] === null
+                    ? 'unanswered'
+                    : answerCorrectness[index]
+                    ? 'correct'
+                    : 'incorrect'
+                }`}
+                onClick={() => setCurrentQuestion(index)} // Allow clicking on progress circles to navigate
+                style={{ cursor: 'pointer' }} // Add pointer cursor to indicate clickability
               ></span>
             ))}
           </div>

@@ -53,4 +53,41 @@ export const quizQuestions = [
       { answerText: 'Pacific Ocean', isCorrect: true },
     ],
   },
+  // New questions added below
+  {
+    questionText: 'What is the smallest prime number?',
+    answerOptions: [
+      { answerText: '0', isCorrect: false },
+      { answerText: '1', isCorrect: false },
+      { answerText: '2', isCorrect: true },
+      { answerText: '3', isCorrect: false },
+    ],
+  },
+  {
+    questionText: 'Which element has the chemical symbol "O"?',
+    answerOptions: [
+      { answerText: 'Gold', isCorrect: false },
+      { answerText: 'Oxygen', isCorrect: true },
+      { answerText: 'Osmium', isCorrect: false },
+      { answerText: 'Oganesson', isCorrect: false },
+    ],
+  },
+  {
+    questionText: 'What is the capital city of Japan?',
+    answerOptions: [
+      { answerText: 'Seoul', isCorrect: false },
+      { answerText: 'Beijing', isCorrect: false },
+      { answerText: 'Tokyo', isCorrect: true },
+      { answerText: 'Bangkok', isCorrect: false },
+    ],
+  },
+  {
+    questionText: 'Which gas do plants absorb from the atmosphere?',
+    answerOptions: [
+      { answerText: 'Oxygen', isCorrect: false },
+      { answerText: 'Carbon Dioxide', isCorrect: true },
+      { answerText: 'Nitrogen', isCorrect: false },
+      { answerText: 'Hydrogen', isCorrect: false },
+    ],
+  },
 ];
